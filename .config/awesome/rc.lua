@@ -451,5 +451,6 @@ client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_n
 -- {{{ Startup
 awful.util.spawn_with_shell("setxkbmap -option ctrl:swapcaps")
 awful.util.spawn_with_shell("compton --backend glx --vsync opengl-swc")
+awful.util.spawn_with_shell("xscreensaver")
 awful.util.spawn_with_shell("workrave")
 -- }}}
