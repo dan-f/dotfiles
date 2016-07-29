@@ -124,6 +124,21 @@ menubar.utils.terminal = terminal -- Set the terminal for applications that requ
 -- Create a textclock widget
 mytextclock = awful.widget.textclock()
 
+-- Battery widget
+mybattery = lain.widgets.bat({
+    ac = 'AC',
+    timeout = 15,
+    settings = function ()
+        local markup
+        if bat_now.ac_status == 1 then
+            markup = "Chrg... "
+        else
+            markup = "Bat: " .. bat_now.perc .. "%"
+        end
+        widget:set_markup("| " .. markup .. " (" .. bat_now.time .. ") |")
+    end
+})
+
 -- Create a wibox for each screen and add it
 mywibox = {}
 mypromptbox = {}
@@ -203,8 +218,9 @@ for s = 1, screen.count() do
     -- Widgets that are aligned to the right
     local right_layout = wibox.layout.fixed.horizontal()
     if s == 1 then right_layout:add(wibox.widget.systray()) end
+    right_layout:add(mybattery)
     right_layout:add(mytextclock)
-    right_layout:add(mylayoutbox[s])
+    -- right_layout:add(mylayoutbox[s])
 
     -- Now bring it all together (with the tasklist in the middle)
     local layout = wibox.layout.align.horizontal()
@@ -283,7 +299,28 @@ globalkeys = awful.util.table.join(
                   awful.util.getdir("cache") .. "/history_eval")
               end),
     -- Menubar
-    awful.key({ modkey }, "p", function() menubar.show() end)
+    awful.key({ modkey }, "p", function() menubar.show() end),
+
+    -- Volume
+    awful.key({}, "XF86AudioRaiseVolume", function ()
+        awful.util.spawn("pactl set-sink-volume 0 +5%")
+    end),
+    awful.key({}, "XF86AudioLowerVolume", function ()
+        awful.util.spawn("pactl set-sink-volume 0 -5%")
+    end),
+    awful.key({}, "XF86AudioMute", function ()
+        awful.util.spawn("pactl set-sink-mute 0 toggle")
+    end),
+
+    -- Screen Brightness
+    awful.key({}, "XF86MonBrightnessUp", function ()
+        awful.util.spawn("xbacklight -inc 20")
+    end),
+    awful.key({}, "XF86MonBrightnessDown", function ()
+        awful.util.spawn("xbacklight -dec 20")
+    end)
+    -- bindsym XF86MonBrightnessUp exec xbacklight -inc 20 # increase screen brightness
+    -- bindsym XF86MonBrightnessDown exec xbacklight -dec 20 # decrease screen brightness
 )
 
 clientkeys = awful.util.table.join(
@@ -480,9 +517,5 @@ awful.util.spawn_with_shell("run-once thunderbird")
 awful.util.spawn_with_shell("run-once pidgin")
 awful.util.spawn_with_shell("run-once $HOME/.local/opt/Telegram/Telegram")
 awful.util.spawn_with_shell("run-once google-chrome")
--- }}}
-
--- {{{
-awful.key({ modkey, "Control", "Shift" }, "l", function () awful.util.spawn("xscreensaver-command -lock") end)
 -- }}}
 -- vim: set foldmethod=marker tabstop=4 shiftwidth=4 expandtab:
