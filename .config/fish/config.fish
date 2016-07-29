@@ -1,5 +1,6 @@
 set -x PATH ~/.npm-global/bin $PATH
 set -x PATH node_modules/.bin $PATH
+set -x PATH $HOME/bin $PATH
 
 set -x EDITOR "nvim"
 

@@ -372,6 +372,15 @@ awful.rules.rules = {
     -- Set Firefox to always map on tags number 2 of screen 1.
     -- { rule = { class = "Firefox" },
     --   properties = { tag = tags[1][2] } },
+    { rule = { class = "Thunderbird" },
+      properties = { tag = tags[1][1] } },
+    { rule = { class = "Telegram" },
+      properties = { tag = tags[1][2] } },
+    { rule = { class = "Pidgin" },
+      properties = { tag = tags[1][2] } },
+    { rule = { class = "google-chrome" },
+      properties = { floating = true,
+                     tag = tags[1][3] } }
 }
 -- }}}
 
@@ -449,8 +458,22 @@ client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_n
 -- }}}
 
 -- {{{ Startup
+-- core settings
+awful.util.spawn_with_shell("/usr/libexec/gnome-settings-daemon")
+awful.util.spawn_with_shell("gnome-keyring-daemon")
 awful.util.spawn_with_shell("setxkbmap -option ctrl:swapcaps")
 awful.util.spawn_with_shell("compton --backend glx --vsync opengl-swc")
-awful.util.spawn_with_shell("xscreensaver")
-awful.util.spawn_with_shell("workrave")
+awful.util.spawn_with_shell("nm-applet")
+-- awful.util.spawn_with_shell("xscreensaver")
+-- awful.util.spawn_with_shell("xfce4-power-manager")
+-- apps
+awful.util.spawn_with_shell("run-once workrave")
+awful.util.spawn_with_shell("run-once thunderbird")
+awful.util.spawn_with_shell("run-once pidgin")
+awful.util.spawn_with_shell("run-once $HOME/.local/opt/Telegram/Telegram")
+awful.util.spawn_with_shell("run-once google-chrome")
+-- }}}
+
+-- {{{
+awful.key({ modkey, "Control", "Shift" }, "l", function () awful.util.spawn("xscreensaver-command -lock") end)
 -- }}}
