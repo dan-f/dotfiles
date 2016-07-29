@@ -5,6 +5,7 @@ awful.rules = require("awful.rules")
 require("awful.autofocus")
 -- Widget and layout library
 local wibox = require("wibox")
+local lain = require("lain")
 -- Theme handling library
 local beautiful = require("beautiful")
 -- Notification library
@@ -38,7 +39,12 @@ end
 
 -- {{{ Variable definitions
 -- Themes define colours, icons, font and wallpapers.
-beautiful.init("/usr/share/awesome/themes/default/theme.lua")
+homedir = os.getenv("HOME")
+confdir = homedir .. "/.config/awesome"
+themesdir = confdir .. "/themes"
+themedir = themesdir .. "/default"
+
+beautiful.init(themedir .. "/theme.lua")
 
 -- This is used later as the default terminal and editor to run.
 terminal = "gnome-terminal"
@@ -56,21 +62,23 @@ modkey = "Mod4"
 local layouts =
 {
     awful.layout.suit.floating,
-    awful.layout.suit.tile,
-    awful.layout.suit.tile.left,
-    awful.layout.suit.tile.bottom,
-    awful.layout.suit.tile.top,
-    awful.layout.suit.fair,
-    awful.layout.suit.fair.horizontal,
+    -- awful.layout.suit.tile,
+    lain.layout.uselesstile,
+    -- awful.layout.suit.tile.left,
+    -- awful.layout.suit.tile.bottom,
+    -- awful.layout.suit.tile.top,
+    -- awful.layout.suit.fair,
+    -- awful.layout.suit.fair.horizontal,
     awful.layout.suit.spiral,
-    awful.layout.suit.spiral.dwindle,
-    awful.layout.suit.max,
-    awful.layout.suit.max.fullscreen,
-    awful.layout.suit.magnifier
+    -- awful.layout.suit.spiral.dwindle,
+    -- awful.layout.suit.max,
+    -- awful.layout.suit.max.fullscreen,
+    -- awful.layout.suit.magnifier
 }
 -- }}}
 
 -- {{{ Wallpaper
+beautiful.wallpaper = homedir .. "/Pictures/Wallpapers/340794.jpg"
 if beautiful.wallpaper then
     for s = 1, screen.count() do
         gears.wallpaper.maximized(beautiful.wallpaper, s, true)
@@ -81,8 +89,8 @@ end
 -- {{{ Tags
 -- Define a tag table which hold all screen tags.
 tags = {
-   names = { "mail", "chat", "www", "dev" },
-   layout = { layouts[1], layouts[1], layouts[1], layouts[8] }
+   names = { "www", "dev", "mail", "chat" },
+   layout = { layouts[1], layouts[2], layouts[1], layouts[2] }
 }
 for s = 1, screen.count() do
     -- Each screen has its own tag table.
@@ -372,15 +380,15 @@ awful.rules.rules = {
     -- Set Firefox to always map on tags number 2 of screen 1.
     -- { rule = { class = "Firefox" },
     --   properties = { tag = tags[1][2] } },
-    { rule = { class = "Thunderbird" },
-      properties = { tag = tags[1][1] } },
-    { rule = { class = "Telegram" },
-      properties = { tag = tags[1][2] } },
-    { rule = { class = "Pidgin" },
-      properties = { tag = tags[1][2] } },
     { rule = { class = "google-chrome" },
       properties = { floating = true,
-                     tag = tags[1][3] } }
+                     tag = tags[1][1] } },
+    { rule = { class = "Thunderbird" },
+      properties = { tag = tags[1][3] } },
+    { rule = { class = "Telegram" },
+      properties = { tag = tags[1][4] } },
+    { rule = { class = "Pidgin" },
+      properties = { tag = tags[1][4] } }
 }
 -- }}}
 
@@ -477,3 +485,4 @@ awful.util.spawn_with_shell("run-once google-chrome")
 -- {{{
 awful.key({ modkey, "Control", "Shift" }, "l", function () awful.util.spawn("xscreensaver-command -lock") end)
 -- }}}
+-- vim: set foldmethod=marker tabstop=4 shiftwidth=4 expandtab:
